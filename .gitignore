@@ -1,0 +1,9 @@
+build/
+*.exe
+*.o
+*.obj
+*.log
+.vscode/
+stderr.txt
+stdout.txt
+willbeused.txt

@@ -1,5 +1,0 @@
-D:/assignments/pipeline_project/build/CMakeFiles/serial_app.dir
-D:/assignments/pipeline_project/build/CMakeFiles/openmp_app.dir
-D:/assignments/pipeline_project/build/CMakeFiles/mpi_app.dir
-D:/assignments/pipeline_project/build/CMakeFiles/edit_cache.dir
-D:/assignments/pipeline_project/build/CMakeFiles/rebuild_cache.dir
