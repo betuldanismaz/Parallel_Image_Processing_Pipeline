@@ -2,16 +2,16 @@
 #include <iostream>
 #include <cmath>
 
-// ============================================================================
+
 // PREPROCESS STAGE: Convert RGB input to Grayscale
-// ============================================================================
+
 void preprocess_stage(const cv::Mat& input, cv::Mat& gray) {
     cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
 }
 
-// ============================================================================
+
 // PROCESS STAGE: Apply 7x7 Sobel Edge Detection (Manual 2D Convolution)
-// ============================================================================
+
 void process_stage(const cv::Mat& gray, cv::Mat& output) {
     int rows = gray.rows;
     int cols = gray.cols;
@@ -19,11 +19,11 @@ void process_stage(const cv::Mat& gray, cv::Mat& output) {
     // Initialize output with zeros
     output = cv::Mat::zeros(gray.size(), CV_8UC1);
     
-    // Define 7x7 Extended Sobel Kernels (Horizontal and Vertical Gradients)
+    // Define 7x7 Extended Sobel Kernels 
     const int kernel_size = 7;
     const int half_kernel = kernel_size / 2; // = 3
     
-    // Gx (Horizontal Gradient) - 7x7 Sobel Kernel
+    // Gx (Horizontal Gradient) 
     const int Gx[7][7] = {
         {-3, -2, -1,  0,  1,  2,  3},
         {-4, -3, -2,  0,  2,  3,  4},
@@ -34,7 +34,7 @@ void process_stage(const cv::Mat& gray, cv::Mat& output) {
         {-3, -2, -1,  0,  1,  2,  3}
     };
     
-    // Gy (Vertical Gradient) - 7x7 Sobel Kernel
+    // Gy (Vertical Gradient) 
     const int Gy[7][7] = {
         {-3, -4, -5, -6, -5, -4, -3},
         {-2, -3, -4, -5, -4, -3, -2},
@@ -79,25 +79,24 @@ void process_stage(const cv::Mat& gray, cv::Mat& output) {
     }
 }
 
-// ============================================================================
+
 // POSTPROCESS STAGE: Convert to Binary Image using Thresholding
-// ============================================================================
+
 void postprocess_stage(const cv::Mat& result, cv::Mat& output) {
     // Apply binary threshold: pixels > 50 become white (255), others black (0)
     cv::threshold(result, output, 50, 255, cv::THRESH_BINARY);
 }
 
-// ============================================================================
 // MAIN: Serial Pipeline Baseline with 7x7 Sobel Kernel
-// ============================================================================
+
 int main() {
     std::cout << "==================================================" << std::endl;
     std::cout << "Serial Image Processing Pipeline (7x7 Sobel)" << std::endl;
     std::cout << "==================================================" << std::endl;
     
-    // ------------------------------------------------------------------------
+   
     // LOAD INPUT IMAGE
-    // ------------------------------------------------------------------------
+
     std::string imagePath = "input.jpg";
     cv::Mat inputImage = cv::imread(imagePath, cv::IMREAD_COLOR);
     
@@ -108,16 +107,15 @@ int main() {
     
     std::cout << "Image loaded: " << imagePath << " (" << inputImage.cols << "x" << inputImage.rows << " pixels)" << std::endl;
     
-    // ------------------------------------------------------------------------
-    // DECLARE PIPELINE VARIABLES
-    // ------------------------------------------------------------------------
+
+
     cv::Mat grayImage;
     cv::Mat processedImage;
     cv::Mat outputImage;
     
-    // ------------------------------------------------------------------------
-    // START TIMING (Entire Pipeline)
-    // ------------------------------------------------------------------------
+
+    // START TIMING 
+
     double startTime = static_cast<double>(cv::getTickCount());
     
     // ------------------------------------------------------------------------
@@ -141,20 +139,16 @@ int main() {
     postprocess_stage(processedImage, outputImage);
     std::cout << "[STAGE 3] POSTPROCESS: Completed." << std::endl;
     
-    // ------------------------------------------------------------------------
+  
     // STOP TIMING
-    // ------------------------------------------------------------------------
     double endTime = static_cast<double>(cv::getTickCount());
     double executionTime = (endTime - startTime) * 1000.0 / cv::getTickFrequency();
     
-    // ------------------------------------------------------------------------
-    // SAVE OUTPUT
-    // ------------------------------------------------------------------------
+
     cv::imwrite("results/output_serial_7x7.png", outputImage);
     
-    // ------------------------------------------------------------------------
     // DISPLAY RESULTS
-    // ------------------------------------------------------------------------
+
     std::cout << "\n==================================================" << std::endl;
     std::cout << "Pipeline Execution Time: " << executionTime << " ms" << std::endl;
     std::cout << "Output saved as: results/output_serial_7x7.png" << std::endl;

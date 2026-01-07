@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 
 
-SERIAL_BASELINE_MS = 9093.02  # Fixed serial baseline execution time
+SERIAL_BASELINE_MS = 9093.02  
 
 
 OPENMP_FILE = "results/openmp_benchmark_results.csv"

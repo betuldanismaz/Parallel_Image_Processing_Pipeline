@@ -9,16 +9,16 @@
 #include <sstream>
 #include <filesystem>
 
-// ============================================================================
+
 // PREPROCESS STAGE: Convert RGB input to Grayscale (Master only)
-// ============================================================================
+
 void preprocess_stage(const cv::Mat& input, cv::Mat& gray) {
     cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
 }
 
-// ============================================================================
+
 // PROCESS STAGE: Apply 7x7 Sobel Edge Detection (MPI Distributed)
-// ============================================================================
+
 void process_stage(cv::Mat& grayImage, cv::Mat& outputImage, int rank, int size, 
                    long long& totalEnergy) {
     
@@ -142,16 +142,16 @@ void process_stage(cv::Mat& grayImage, cv::Mat& outputImage, int rank, int size,
     }
 }
 
-// ============================================================================
+
 // POSTPROCESS STAGE: Convert to Binary Image using Thresholding (Master only)
-// ============================================================================
+
 void postprocess_stage(const cv::Mat& result, cv::Mat& output) {
     cv::threshold(result, output, 50, 255, cv::THRESH_BINARY);
 }
 
-// ============================================================================
+
 // MAIN: MPI Distributed Pipeline
-// ============================================================================
+
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
     
@@ -163,9 +163,9 @@ int main(int argc, char** argv) {
     long long totalEnergy = 0;
     double startTime, endTime;
     
-    // ========================================================================
+   
     // RANK 0: Load Input Image
-    // ========================================================================
+    
     if (rank == 0) {
         std::cout << "==================================================" << std::endl;
         std::cout << "MPI Image Processing Pipeline (7x7 Sobel)" << std::endl;
@@ -186,18 +186,18 @@ int main(int argc, char** argv) {
     
     startTime = MPI_Wtime();
     
-    // ========================================================================
+
     // STAGE 1: PREPROCESS (Master only)
-    // ========================================================================
+
     if (rank == 0) {
         std::cout << "\n[STAGE 1] PREPROCESS: Converting to Grayscale..." << std::endl;
         preprocess_stage(inputImage, grayImage);
         std::cout << "[STAGE 1] PREPROCESS: Completed." << std::endl;
     }
     
-    // ========================================================================
+
     // STAGE 2: PROCESS (MPI Distributed)
-    // ========================================================================
+
     if (rank == 0) {
         std::cout << "\n[STAGE 2] PROCESS: Applying 7x7 Sobel Edge Detection (MPI Distributed)..." << std::endl;
     }
@@ -209,9 +209,9 @@ int main(int argc, char** argv) {
         std::cout << "[STAGE 2] Total Energy: " << totalEnergy << std::endl;
     }
     
-    // ========================================================================
+
     // STAGE 3: POSTPROCESS (Master only)
-    // ========================================================================
+
     if (rank == 0) {
         std::cout << "\n[STAGE 3] POSTPROCESS: Applying Binary Threshold..." << std::endl;
         postprocess_stage(processedImage, outputImage);
@@ -221,9 +221,9 @@ int main(int argc, char** argv) {
     endTime = MPI_Wtime();
     double executionTime = (endTime - startTime) * 1000.0; // Convert to ms
     
-    // ========================================================================
+
     // RANK 0: Save Results and Log to CSV
-    // ========================================================================
+
     if (rank == 0) {
         cv::imwrite("output_mpi_7x7.png", outputImage);
         
@@ -232,9 +232,9 @@ int main(int argc, char** argv) {
         std::cout << "Output saved as: output_mpi_7x7.png" << std::endl;
         std::cout << "==================================================" << std::endl;
         
-        // ====================================================================
+
         // BENCHMARK LOGGING TO CSV
-        // ====================================================================
+
         std::string resultsDir = "results";
         
         // Create results directory if it doesn't exist

@@ -7,16 +7,16 @@
 #include <sstream>
 #include <omp.h>
 
-// ============================================================================
+
 // PREPROCESS STAGE: Convert RGB input to Grayscale (Serial)
-// ============================================================================
+
 void preprocess_stage(const cv::Mat& input, cv::Mat& gray) {
     cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
 }
 
-// ============================================================================
+
 // PROCESS STAGE: Apply 7x7 Sobel Edge Detection with OpenMP Parallelization
-// ============================================================================
+
 void process_stage(const cv::Mat& gray, cv::Mat& output, long long& totalEnergy) {
     int rows = gray.rows;
     int cols = gray.cols;
@@ -91,25 +91,19 @@ void process_stage(const cv::Mat& gray, cv::Mat& output, long long& totalEnergy)
     }
 }
 
-// ============================================================================
 // POSTPROCESS STAGE: Convert to Binary Image using Thresholding (Serial)
-// ============================================================================
 void postprocess_stage(const cv::Mat& result, cv::Mat& output) {
     // Apply binary threshold: pixels > 50 become white (255), others black (0)
     cv::threshold(result, output, 50, 255, cv::THRESH_BINARY);
 }
 
-// ============================================================================
 // MAIN: OpenMP Parallel Pipeline with 7x7 Sobel Kernel
-// ============================================================================
 int main() {
     std::cout << "==================================================" << std::endl;
     std::cout << "OpenMP Image Processing Pipeline (7x7 Sobel)" << std::endl;
     std::cout << "==================================================" << std::endl;
     
-    // ------------------------------------------------------------------------
     // GET THREAD COUNT FROM USER
-    // ------------------------------------------------------------------------
     int threadCount;
     std::cout << "Enter the number of threads to use: ";
     std::cin >> threadCount;
@@ -124,9 +118,7 @@ int main() {
     
     std::cout << "Thread Count: " << threadCount << std::endl;
     
-    // ------------------------------------------------------------------------
     // LOAD INPUT IMAGE
-    // ------------------------------------------------------------------------
     std::string imagePath = "input.jpg";
     cv::Mat inputImage = cv::imread(imagePath, cv::IMREAD_COLOR);
     
@@ -137,17 +129,13 @@ int main() {
     
     std::cout << "Image loaded: " << imagePath << " (" << inputImage.cols << "x" << inputImage.rows << " pixels)" << std::endl;
     
-    // ------------------------------------------------------------------------
     // DECLARE PIPELINE VARIABLES
-    // ------------------------------------------------------------------------
     cv::Mat grayImage;
     cv::Mat processedImage;
     cv::Mat outputImage;
     long long totalEnergy = 0;
     
-    // ------------------------------------------------------------------------
     // START TIMING (Entire Pipeline)
-    // ------------------------------------------------------------------------
     double startTime = static_cast<double>(cv::getTickCount());
     
     // ------------------------------------------------------------------------
@@ -172,28 +160,20 @@ int main() {
     postprocess_stage(processedImage, outputImage);
     std::cout << "[STAGE 3] POSTPROCESS: Completed." << std::endl;
     
-    // ------------------------------------------------------------------------
     // STOP TIMING
-    // ------------------------------------------------------------------------
     double endTime = static_cast<double>(cv::getTickCount());
     double executionTime = (endTime - startTime) * 1000.0 / cv::getTickFrequency();
     
-    // ------------------------------------------------------------------------
-    // SAVE OUTPUT
-    // ------------------------------------------------------------------------
     cv::imwrite("results/output_openmp_7x7.png", outputImage);
     
-    // ------------------------------------------------------------------------
     // DISPLAY RESULTS
-    // ------------------------------------------------------------------------
     std::cout << "\n==================================================" << std::endl;
     std::cout << "Total Pipeline Time: " << executionTime << " ms" << std::endl;
     std::cout << "Output saved as: results/output_openmp_7x7.png" << std::endl;
     std::cout << "==================================================" << std::endl;
     
-    // ------------------------------------------------------------------------
     // LOG RESULTS TO CSV (Automated Benchmarking)
-    // ------------------------------------------------------------------------
+   
     std::string csvFilename = "results/openmp_benchmark_results.csv";
     bool fileExists = false;
     
