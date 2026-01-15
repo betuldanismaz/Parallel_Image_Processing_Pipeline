@@ -223,39 +223,6 @@ pip install pandas matplotlib numpy
 
 ---
 
-## Installation & Build
-
-### Step 1: Clone the Repository
-
-```bash
-git clone <repository-url>
-cd pipeline_project
-```
-
-### Step 2: Create Build Directory
-
-```bash
-mkdir build
-cd build
-```
-
-### Step 3: Configure with CMake
-
-```bash
-cmake ..
-```
-
-### Step 4: Build
-
-```bash
-cmake --build . --config Release
-```
-
-Or using Make (Linux/macOS):
-
-```bash
-make -j$(nproc)
-```
 
 ### Build Outputs
 
